@@ -1,7 +1,10 @@
 // Open-Meteo API - Free, no API key required
 const WEATHER_BASE_URL = 'https://api.open-meteo.com/v1';
 // Nominatim (OpenStreetMap) - Free geocoding API
-const GEOCODING_BASE_URL = 'https://nominatim.openstreetmap.org';
+// Use proxy in development to avoid CORS issues
+const GEOCODING_BASE_URL = import.meta.env.DEV 
+  ? '/api/nominatim' 
+  : 'https://nominatim.openstreetmap.org';
 
 export const getCurrentWeather = async (lat, lon, cityName = '', countryCode = '') => {
   try {
@@ -34,9 +37,16 @@ export const getForecast = async (lat, lon) => {
 
 export const searchCity = async (query) => {
   try {
+    const headers = import.meta.env.DEV ? {} : {
+      'User-Agent': 'WeatherApp/1.0 (Contact: weather@example.com)',
+      'Accept': 'application/json',
+    };
+    
     const response = await fetch(
-      `${GEOCODING_BASE_URL}/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`
+      `${GEOCODING_BASE_URL}/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`,
+      { headers }
     );
+    
     if (!response.ok) throw new Error('Failed to search city');
     const data = await response.json();
     
@@ -59,10 +69,21 @@ export const reverseGeocode = async (lat, lon) => {
     // Reduced delay for better performance
     await new Promise(resolve => setTimeout(resolve, 200));
     
+    const headers = import.meta.env.DEV ? {} : {
+      'User-Agent': 'WeatherApp/1.0 (Contact: weather@example.com)',
+      'Accept': 'application/json',
+    };
+    
     const response = await fetch(
-      `${GEOCODING_BASE_URL}/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`
+      `${GEOCODING_BASE_URL}/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`,
+      { headers }
     );
-    if (!response.ok) throw new Error('Failed to reverse geocode');
+    
+    if (!response.ok) {
+      // If request fails, return empty (non-blocking)
+      return { name: '', country: '' };
+    }
+    
     const data = await response.json();
     
     if (!data || !data.address) {
@@ -75,7 +96,9 @@ export const reverseGeocode = async (lat, lon) => {
       country: address.country_code?.toUpperCase() || ''
     };
   } catch (error) {
-    console.error('Error reverse geocoding:', error);
+    // Silently fail - reverse geocoding is optional and non-blocking
+    // The app will still work without city name
+    // CORS errors are expected in production without a proxy
     return { name: '', country: '' };
   }
 };

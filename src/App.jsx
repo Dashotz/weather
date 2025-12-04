@@ -79,7 +79,7 @@ function App() {
   }, []);
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 overflow-hidden flex flex-col p-4 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 overflow-y-auto lg:overflow-hidden lg:h-screen flex flex-col p-3 sm:p-4 relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-800/30 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
@@ -89,10 +89,10 @@ function App() {
       
       <div className="flex-shrink-0 mb-3 relative z-10">
         <header className="text-center mb-3">
-          <h1 className="text-3xl font-extrabold text-white drop-shadow-2xl mb-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-2xl mb-1">
             Weather App
           </h1>
-          <p className="text-sm text-white/80">Your weather companion</p>
+          <p className="text-xs sm:text-sm text-white/80">Your weather companion</p>
         </header>
         <div className="max-w-4xl mx-auto">
           <SearchBar onSearch={handleCitySearch} onLocationClick={handleLocationSearch} />
@@ -100,7 +100,7 @@ function App() {
       </div>
 
         {error && (
-          <div className="flex-shrink-0 max-w-2xl mx-auto mb-2 glass-strong rounded-xl shadow-lg text-red-700 px-4 py-3 text-sm border border-red-200 relative z-10 animate-fadeIn">
+          <div className="flex-shrink-0 max-w-2xl mx-auto mb-2 glass-strong rounded-xl shadow-lg text-red-700 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-red-200 relative z-10 animate-fadeIn">
             <p className="font-bold flex items-center gap-2">
               <span>⚠️</span>
               <span>Error:</span>
@@ -110,20 +110,20 @@ function App() {
         )}
 
         {loading && (
-          <div className="flex-1 flex items-center justify-center relative z-10">
-            <div className="text-center glass-strong rounded-2xl p-8 shadow-2xl">
-              <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-white border-t-transparent"></div>
-              <p className="text-gray-800 mt-6 text-lg font-semibold">Loading weather data...</p>
-              <p className="text-gray-600 text-sm mt-2">Please wait a moment</p>
+          <div className="flex-1 flex items-center justify-center relative z-10 min-h-[50vh]">
+            <div className="text-center glass-strong rounded-2xl p-6 sm:p-8 shadow-2xl">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-white border-t-transparent"></div>
+              <p className="text-gray-800 mt-4 sm:mt-6 text-base sm:text-lg font-semibold">Loading weather data...</p>
+              <p className="text-gray-600 text-xs sm:text-sm mt-2">Please wait a moment</p>
             </div>
           </div>
         )}
 
         {weather && !loading && (
-          <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden min-h-0">
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:overflow-hidden lg:min-h-0">
             {/* Left Column: Weather & Temperatures */}
-            <div className="overflow-hidden flex flex-col relative z-10">
-              <div className="bg-gray-800/40 backdrop-blur-sm rounded-3xl shadow-2xl p-5 h-full flex flex-col overflow-y-auto border border-gray-700/50">
+            <div className="lg:overflow-hidden flex flex-col relative z-10">
+              <div className="bg-gray-800/40 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-3 sm:p-5 lg:h-full flex flex-col lg:overflow-y-auto border border-gray-700/50">
                 <WeatherCard 
                   weather={weather} 
                   forecast={forecast}
@@ -134,13 +134,13 @@ function App() {
               </div>
             </div>
             {/* Right Column: Map */}
-            <div className="overflow-hidden flex flex-col relative z-10">
-              <div className="bg-gray-800/40 backdrop-blur-sm rounded-3xl shadow-2xl p-5 h-full flex flex-col border border-gray-700/50">
-                <h2 className="text-xl font-bold text-gray-200 mb-3 flex items-center gap-2">
-                  <span className="text-2xl">🗺️</span>
+            <div className="lg:overflow-hidden flex flex-col relative z-10">
+              <div className="bg-gray-800/40 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-3 sm:p-5 lg:h-full flex flex-col border border-gray-700/50">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-200 mb-3 flex items-center gap-2">
+                  <span className="text-xl sm:text-2xl">🗺️</span>
                   <span>Interactive Map</span>
                 </h2>
-                <div className="flex-1 min-h-0">
+                <div className="flex-1 min-h-[300px] sm:min-h-[400px] lg:min-h-0">
                   <WeatherMap position={position} weather={weather} />
                 </div>
               </div>
@@ -149,13 +149,13 @@ function App() {
         )}
 
         {!weather && !loading && !error && (
-          <div className="flex-1 flex items-center justify-center relative z-10">
-            <div className="text-center glass-strong rounded-2xl p-8 shadow-2xl max-w-md">
-              <div className="text-6xl mb-4">🌤️</div>
-              <p className="text-gray-800 text-xl font-bold mb-2">
+          <div className="flex-1 flex items-center justify-center relative z-10 min-h-[50vh]">
+            <div className="text-center glass-strong rounded-2xl p-6 sm:p-8 shadow-2xl max-w-md mx-4">
+              <div className="text-5xl sm:text-6xl mb-4">🌤️</div>
+              <p className="text-gray-800 text-lg sm:text-xl font-bold mb-2">
                 Welcome to Weather App
               </p>
-              <p className="text-gray-600 text-base">
+              <p className="text-gray-600 text-sm sm:text-base">
                 Search for a city or click the location button to get started!
               </p>
             </div>

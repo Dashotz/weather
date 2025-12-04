@@ -152,16 +152,16 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
 
   if (loading) {
     return (
-      <div className="mt-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <span className="text-2xl">🌍</span>
+      <div className="mt-3 sm:mt-4">
+        <h3 className="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4 flex items-center gap-2">
+          <span className="text-xl sm:text-2xl">🌍</span>
           <span>Nearby Cities</span>
         </h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="bg-gray-700/50 rounded-xl p-4 animate-pulse border border-gray-600/50">
-              <div className="h-4 bg-gray-600 rounded w-3/4 mb-3"></div>
-              <div className="h-6 bg-gray-600 rounded w-1/2"></div>
+            <div key={i} className="bg-gray-700/50 rounded-lg sm:rounded-xl p-2 sm:p-4 animate-pulse border border-gray-600/50">
+              <div className="h-3 sm:h-4 bg-gray-600 rounded w-3/4 mb-2 sm:mb-3"></div>
+              <div className="h-5 sm:h-6 bg-gray-600 rounded w-1/2"></div>
             </div>
           ))}
         </div>
@@ -174,24 +174,24 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
   }
 
   return (
-    <div className="mt-4">
-      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-        <span className="text-2xl">🌍</span>
+    <div className="mt-3 sm:mt-4">
+      <h3 className="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4 flex items-center gap-2">
+        <span className="text-xl sm:text-2xl">🌍</span>
         <span>Nearby Cities</span>
       </h3>
-      <div className="grid grid-cols-2 gap-3 overflow-hidden">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 overflow-hidden">
         {cities.map((city, index) => (
           <button
             key={index}
             onClick={() => onCityClick(city.lat, city.lon, city.name)}
-            className="group bg-gray-700/50 rounded-xl p-3 text-left hover:bg-gray-700/70 transition-all border border-gray-600/50 hover:border-blue-700/50 hover:shadow-lg active:scale-[0.98]"
+            className="group bg-gray-700/50 rounded-lg sm:rounded-xl p-2 sm:p-3 text-left hover:bg-gray-700/70 transition-all border border-gray-600/50 hover:border-blue-700/50 hover:shadow-lg active:scale-[0.98]"
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white truncate group-hover:text-blue-300 transition-colors">
+                <p className="text-xs sm:text-sm font-bold text-white truncate group-hover:text-blue-300 transition-colors">
                   {city.name}
                 </p>
-                <p className="text-xs text-gray-300 mt-0.5">
+                <p className="text-[10px] sm:text-xs text-gray-300 mt-0.5">
                   <span className="font-medium">Philippines</span>
                   {city.distance && (
                     <span className="ml-1 text-gray-400">• {Math.round(city.distance)}km</span>
@@ -199,20 +199,20 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
                 </p>
               </div>
               {city.weather && (
-                <div className="flex items-center gap-2 ml-2">
+                <div className="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0">
                   <img
                     src={getWeatherIcon(city.weather.weather[0].icon)}
                     alt={city.weather.weather[0].description}
-                    className="w-10 h-10"
+                    className="w-8 h-8 sm:w-10 sm:h-10"
                   />
-                  <span className="text-base font-bold text-white whitespace-nowrap">
+                  <span className="text-sm sm:text-base font-bold text-white whitespace-nowrap">
                     {Math.round(city.weather.main.temp)}°C
                   </span>
                 </div>
               )}
             </div>
             {city.weather && (
-              <p className="text-xs text-gray-300 capitalize mt-2 truncate font-medium">
+              <p className="text-[10px] sm:text-xs text-gray-300 capitalize mt-1 sm:mt-2 truncate font-medium">
                 {city.weather.weather[0].description}
               </p>
             )}
