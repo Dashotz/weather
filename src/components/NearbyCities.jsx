@@ -84,7 +84,7 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
   const getNearbyCities = (lat, lon) => {
     if (!lat || !lon) {
       // No location, return major cities
-      return philippineCities.slice(0, 6);
+      return philippineCities.slice(0, 4);
     }
 
     // Calculate distance for all cities
@@ -97,20 +97,20 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
     const nearbyCities = citiesWithDistance
       .filter(city => city.distance <= 150)
       .sort((a, b) => a.distance - b.distance)
-      .slice(0, 6);
+      .slice(0, 4);
     
-    // If we have less than 6 cities within 150km, fill with closest cities overall
-    if (nearbyCities.length < 6) {
+    // If we have less than 4 cities within 150km, fill with closest cities overall
+    if (nearbyCities.length < 4) {
       const closestCities = citiesWithDistance
         .sort((a, b) => a.distance - b.distance)
-        .slice(0, 6);
+        .slice(0, 4);
       
       // Merge and remove duplicates
       const merged = [...nearbyCities];
       const names = new Set(nearbyCities.map(c => c.name));
       
       closestCities.forEach(city => {
-        if (!names.has(city.name) && merged.length < 6) {
+        if (!names.has(city.name) && merged.length < 4) {
           merged.push(city);
           names.add(city.name);
         }
@@ -128,8 +128,8 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
       try {
         const citiesToShow = getNearbyCities(userLat, userLon);
         
-        // Load 6 cities
-        const citiesToLoad = citiesToShow.slice(0, 6);
+        // Load 4 cities
+        const citiesToLoad = citiesToShow.slice(0, 4);
         
         // Fetch weather in parallel - Open-Meteo can handle multiple requests efficiently
         // No sequential delays = much faster loading (was 2.4s+, now ~0.5s)
@@ -156,11 +156,14 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
   if (loading) {
     return (
       <div className="mt-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-3">Nearby Cities</h3>
-        <div className="grid grid-cols-2 gap-2">
+        <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <span className="text-2xl">🌍</span>
+          <span>Nearby Cities</span>
+        </h3>
+        <div className="grid grid-cols-2 gap-3">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="bg-gray-100 rounded-lg p-3 animate-pulse">
-              <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+            <div key={i} className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-4 animate-pulse border border-gray-200">
+              <div className="h-4 bg-gray-300 rounded w-3/4 mb-3"></div>
               <div className="h-6 bg-gray-300 rounded w-1/2"></div>
             </div>
           ))}
@@ -175,23 +178,26 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
 
   return (
     <div className="mt-4">
-      <h3 className="text-lg font-bold text-gray-800 mb-3">Nearby Cities</h3>
-      <div className="grid grid-cols-2 gap-2">
+      <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <span className="text-2xl">🌍</span>
+        <span>Nearby Cities</span>
+      </h3>
+      <div className="grid grid-cols-2 gap-3 overflow-hidden">
         {cities.map((city, index) => (
           <button
             key={index}
             onClick={() => onCityClick(city.lat, city.lon, city.name)}
-            className="bg-gray-50 rounded-lg p-3 text-left hover:bg-gray-100 transition-colors border border-transparent hover:border-blue-200"
+            className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3 text-left hover:from-blue-50 hover:to-purple-50 transition-all border border-gray-200/50 hover:border-blue-300 hover:shadow-lg active:scale-[0.98]"
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-800 truncate">
+                <p className="text-sm font-bold text-gray-800 truncate group-hover:text-blue-700 transition-colors">
                   {city.name}
                 </p>
-                <p className="text-xs text-gray-500">
-                  Philippines
+                <p className="text-xs text-gray-500 mt-0.5">
+                  <span className="font-medium">Philippines</span>
                   {city.distance && (
-                    <span className="ml-1">• {Math.round(city.distance)}km</span>
+                    <span className="ml-1 text-gray-400">• {Math.round(city.distance)}km</span>
                   )}
                 </p>
               </div>
@@ -200,16 +206,16 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
                   <img
                     src={getWeatherIcon(city.weather.weather[0].icon)}
                     alt={city.weather.weather[0].description}
-                    className="w-8 h-8"
+                    className="w-10 h-10 drop-shadow-sm"
                   />
-                  <span className="text-sm font-bold text-gray-800 whitespace-nowrap">
+                  <span className="text-base font-bold text-gray-800 whitespace-nowrap">
                     {Math.round(city.weather.main.temp)}°C
                   </span>
                 </div>
               )}
             </div>
             {city.weather && (
-              <p className="text-xs text-gray-600 capitalize mt-1 truncate">
+              <p className="text-xs text-gray-600 capitalize mt-2 truncate font-medium">
                 {city.weather.weather[0].description}
               </p>
             )}

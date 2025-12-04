@@ -82,64 +82,76 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
   const visibility = weather.visibility ? weather.visibility.toFixed(1) : 'N/A';
 
   return (
-    <div className="space-y-4 h-full flex flex-col">
-      {/* Current Weather - Compact Horizontal Layout */}
-      <div className="flex items-center justify-between border-b pb-3 flex-shrink-0">
-        <div className="flex-1">
-          <h2 className="text-xl font-bold text-gray-800">
-            {weather.name}{weather.sys?.country && `, ${weather.sys.country}`}
-          </h2>
-          <p className="text-sm text-gray-600">{formatDate(weather.dt)}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <img
-            src={getWeatherIcon(weather.weather[0].icon)}
-            alt={weather.weather[0].description}
-            className="w-16 h-16"
-          />
-          <div>
-            <div className="text-4xl font-bold text-gray-800">{currentTemp}°C</div>
-            <p className="text-sm text-gray-500">Feels like {feelsLike}°C</p>
+    <div className="space-y-5 h-full flex flex-col animate-fadeIn">
+      {/* Current Weather - 2 Column Layout */}
+      <div className="flex gap-3 flex-shrink-0">
+        {/* Left Column - Main Weather Card */}
+        <div className="flex-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-6 text-white shadow-2xl">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative z-10 flex items-center gap-6 h-full">
+            {/* Left Side - Location & Date */}
+            <div className="flex flex-col">
+              <h2 className="text-2xl font-bold mb-1 drop-shadow-md">
+                {weather.name}{weather.sys?.country && `, ${weather.sys.country}`}
+              </h2>
+              <p className="text-white/90 text-sm">{formatDate(weather.dt)}</p>
+            </div>
+            
+            {/* Middle - Condition with Icon */}
+            <div className="flex items-center gap-3">
+              <img
+                src={getWeatherIcon(weather.weather[0].icon)}
+                alt={weather.weather[0].description}
+                className="w-16 h-16 drop-shadow-lg"
+              />
+              <p className="text-base capitalize text-white/90 font-medium">
+                {weather.weather[0].description}
+              </p>
+            </div>
+            
+            {/* Right Side - Temperature */}
+            <div className="flex flex-col ml-auto">
+              <div className="text-5xl font-extrabold drop-shadow-md mb-1">{currentTemp}°C</div>
+              <p className="text-white/80 text-sm">Feels like {feelsLike}°C</p>
+            </div>
           </div>
         </div>
-        <div className="text-right">
-          <p className="text-sm capitalize text-gray-600">
-            {weather.weather[0].description}
-          </p>
+        
+        {/* Right Column - Weather Details 2x2 Grid */}
+        <div className="w-48 grid grid-cols-2 gap-2">
+          <div className="bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all">
+            <p className="text-xs text-blue-100 font-medium mb-1">Humidity</p>
+            <p className="text-base font-bold text-white">{humidity}%</p>
+          </div>
+          <div className="bg-gradient-to-br from-green-400 to-green-600 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all">
+            <p className="text-xs text-green-100 font-medium mb-1">Wind</p>
+            <p className="text-base font-bold text-white">{windSpeed} m/s</p>
+          </div>
+          <div className="bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all">
+            <p className="text-[10px] text-purple-100 font-medium mb-0.5">Pressure</p>
+            <p className="text-xs font-bold text-white">{pressure} hPa</p>
+          </div>
+          <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all">
+            <p className="text-xs text-orange-100 font-medium mb-1">Visibility</p>
+            <p className="text-base font-bold text-white">{visibility} km</p>
+          </div>
         </div>
       </div>
 
-      {/* Weather Details Grid - Horizontal */}
-      <div className="grid grid-cols-4 gap-3 flex-shrink-0">
-        <div className="bg-blue-50 rounded-lg p-3 text-center">
-          <p className="text-xs text-gray-600 mb-1">Humidity</p>
-          <p className="text-xl font-bold text-blue-600">{humidity}%</p>
-        </div>
-        <div className="bg-green-50 rounded-lg p-3 text-center">
-          <p className="text-xs text-gray-600 mb-1">Wind</p>
-          <p className="text-xl font-bold text-green-600">{windSpeed} m/s</p>
-        </div>
-        <div className="bg-purple-50 rounded-lg p-3 text-center">
-          <p className="text-xs text-gray-600 mb-1">Pressure</p>
-          <p className="text-xl font-bold text-purple-600">{pressure} hPa</p>
-        </div>
-        <div className="bg-orange-50 rounded-lg p-3 text-center">
-          <p className="text-xs text-gray-600 mb-1">Visibility</p>
-          <p className="text-xl font-bold text-orange-600">{visibility} km</p>
-        </div>
-      </div>
-
-      {/* 5-Day Forecast - Horizontal Layout */}
+      {/* 5-Day Forecast - Enhanced Design */}
       {forecast && (
         <div className="flex-shrink-0">
-          <h3 className="text-lg font-bold text-gray-800 mb-3">5-Day Forecast</h3>
-          <div className="grid grid-cols-5 gap-2">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span className="text-2xl">📅</span>
+            <span>5-Day Forecast</span>
+          </h3>
+          <div className="grid grid-cols-5 gap-3">
             {getForecastItems().map((item, index) => (
               <div
                 key={index}
-                className="bg-gray-50 rounded-lg p-3 text-center hover:bg-gray-100 transition-colors"
+                className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3 text-center hover:from-blue-50 hover:to-purple-50 transition-all hover:shadow-lg hover:scale-105 border border-gray-200/50"
               >
-                <p className="text-xs font-medium text-gray-600 mb-1">
+                <p className="text-xs font-bold text-gray-700 mb-1">
                   {new Date(item.dt * 1000).toLocaleDateString('en-US', {
                     weekday: 'short',
                   })}
@@ -153,15 +165,15 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
                 <img
                   src={getWeatherIcon(item.weather[0].icon)}
                   alt={item.weather[0].description}
-                  className="w-10 h-10 mx-auto mb-2"
+                  className="w-12 h-12 mx-auto mb-2 drop-shadow-sm"
                 />
-                <p className="text-xs text-gray-600 mb-1 capitalize truncate">
+                <p className="text-xs text-gray-600 mb-1 capitalize truncate font-medium">
                   {item.weather[0].description}
                 </p>
-                <p className="text-sm font-bold text-gray-800">
+                <p className="text-base font-bold text-gray-800">
                   {Math.round(item.main.temp)}°C
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 mt-1">
                   {Math.round(item.main.temp_max)}° / {Math.round(item.main.temp_min)}°
                 </p>
               </div>

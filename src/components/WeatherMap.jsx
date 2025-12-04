@@ -25,8 +25,11 @@ const MapUpdater = ({ center, zoom }) => {
 const WeatherMap = ({ position, weather, zoom = 10 }) => {
   if (!position) {
     return (
-      <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-        <p className="text-gray-500">Map will appear when location is selected</p>
+      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-2">🗺️</div>
+          <p className="text-gray-600 font-medium">Map will appear when location is selected</p>
+        </div>
       </div>
     );
   }
@@ -34,7 +37,7 @@ const WeatherMap = ({ position, weather, zoom = 10 }) => {
   const [lat, lon] = position;
 
   return (
-    <div className="w-full h-full rounded-lg overflow-hidden border-2 border-gray-200">
+    <div className="w-full h-full rounded-xl overflow-hidden border-2 border-gray-300 shadow-inner">
       <MapContainer
         center={[lat, lon]}
         zoom={zoom}
@@ -49,19 +52,26 @@ const WeatherMap = ({ position, weather, zoom = 10 }) => {
         />
         <Marker position={[lat, lon]}>
           <Popup>
-            <div className="text-center">
+            <div className="text-center p-2">
               {weather && (
                 <>
-                  <p className="font-bold text-lg">{weather.name}</p>
-                  <p className="text-base font-semibold text-blue-600">
-                    {Math.round(weather.main.temp)}°C
-                  </p>
-                  <p className="text-sm capitalize text-gray-600">
+                  <p className="font-bold text-lg text-gray-800">{weather.name}</p>
+                  <div className="flex items-center justify-center gap-2 my-2">
+                    <img
+                      src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                      alt={weather.weather[0].description}
+                      className="w-10 h-10"
+                    />
+                    <p className="text-xl font-bold text-blue-600">
+                      {Math.round(weather.main.temp)}°C
+                    </p>
+                  </div>
+                  <p className="text-sm capitalize text-gray-600 font-medium">
                     {weather.weather[0].description}
                   </p>
-                  <div className="mt-2 text-xs text-gray-500">
-                    <p>Humidity: {weather.main.humidity}%</p>
-                    <p>Wind: {weather.wind?.speed || 0} m/s</p>
+                  <div className="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-500 space-y-1">
+                    <p>💧 Humidity: {weather.main.humidity}%</p>
+                    <p>💨 Wind: {weather.wind?.speed || 0} m/s</p>
                   </div>
                 </>
               )}
