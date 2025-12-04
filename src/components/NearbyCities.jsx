@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getCurrentWeather } from '../services/weatherApi';
+import { getWeatherIcon } from '../utils/weatherUtils';
 
 const NearbyCities = ({ userLat, userLon, onCityClick }) => {
   const [cities, setCities] = useState([]);
@@ -62,10 +63,6 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
     { name: 'Naga', lat: 13.6192, lon: 123.1814, country: 'PH' },
     { name: 'Legazpi', lat: 13.1394, lon: 123.7444, country: 'PH' },
   ];
-
-  const getWeatherIcon = (iconCode) => {
-    return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-  };
 
   // Calculate distance between two coordinates (Haversine formula)
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -162,9 +159,9 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
         </h3>
         <div className="grid grid-cols-2 gap-3">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-4 animate-pulse border border-gray-200">
-              <div className="h-4 bg-gray-300 rounded w-3/4 mb-3"></div>
-              <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+            <div key={i} className="bg-gray-700/50 rounded-xl p-4 animate-pulse border border-gray-600/50">
+              <div className="h-4 bg-gray-600 rounded w-3/4 mb-3"></div>
+              <div className="h-6 bg-gray-600 rounded w-1/2"></div>
             </div>
           ))}
         </div>
@@ -178,7 +175,7 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
 
   return (
     <div className="mt-4">
-      <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
         <span className="text-2xl">🌍</span>
         <span>Nearby Cities</span>
       </h3>
@@ -187,14 +184,14 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
           <button
             key={index}
             onClick={() => onCityClick(city.lat, city.lon, city.name)}
-            className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3 text-left hover:from-blue-50 hover:to-purple-50 transition-all border border-gray-200/50 hover:border-blue-300 hover:shadow-lg active:scale-[0.98]"
+            className="group bg-gray-700/50 rounded-xl p-3 text-left hover:bg-gray-700/70 transition-all border border-gray-600/50 hover:border-blue-700/50 hover:shadow-lg active:scale-[0.98]"
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-800 truncate group-hover:text-blue-700 transition-colors">
+                <p className="text-sm font-bold text-white truncate group-hover:text-blue-300 transition-colors">
                   {city.name}
                 </p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-gray-300 mt-0.5">
                   <span className="font-medium">Philippines</span>
                   {city.distance && (
                     <span className="ml-1 text-gray-400">• {Math.round(city.distance)}km</span>
@@ -206,16 +203,16 @@ const NearbyCities = ({ userLat, userLon, onCityClick }) => {
                   <img
                     src={getWeatherIcon(city.weather.weather[0].icon)}
                     alt={city.weather.weather[0].description}
-                    className="w-10 h-10 drop-shadow-sm"
+                    className="w-10 h-10"
                   />
-                  <span className="text-base font-bold text-gray-800 whitespace-nowrap">
+                  <span className="text-base font-bold text-white whitespace-nowrap">
                     {Math.round(city.weather.main.temp)}°C
                   </span>
                 </div>
               )}
             </div>
             {city.weather && (
-              <p className="text-xs text-gray-600 capitalize mt-2 truncate font-medium">
+              <p className="text-xs text-gray-300 capitalize mt-2 truncate font-medium">
                 {city.weather.weather[0].description}
               </p>
             )}

@@ -1,11 +1,8 @@
 import NearbyCities from './NearbyCities';
+import { getWeatherIcon } from '../utils/weatherUtils';
 
 const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
   if (!weather) return null;
-
-  const getWeatherIcon = (iconCode) => {
-    return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-  };
 
   const formatDate = (timestamp) => {
     return new Date(timestamp * 1000).toLocaleDateString('en-US', {
@@ -16,13 +13,18 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
   };
 
   const getForecastItems = () => {
-    if (!forecast || !forecast.daily) return [];
+    if (!forecast || !forecast.daily || !forecast.daily.time || forecast.daily.time.length === 0) return [];
     
     // Open-Meteo format: daily data is in arrays (time, weather_code, temperature_2m_max, temperature_2m_min)
+    // The first day (index 0) is today, so we start from index 1 for tomorrow to show next 5 days
     const dailyForecasts = [];
-    const maxDays = Math.min(5, forecast.daily.time.length);
+    const startIndex = 1; // Skip today, start from tomorrow
+    const availableDays = forecast.daily.time.length - startIndex;
+    const maxDays = Math.min(5, availableDays);
     
-    // Weather code mapping
+    if (maxDays <= 0) return []; // No forecast days available
+    
+    // Weather code mapping (WMO Weather interpretation codes)
     const weatherCodeMap = {
       0: { main: 'Clear', description: 'clear sky', icon: '01d' },
       1: { main: 'Clear', description: 'mainly clear', icon: '01d' },
@@ -48,16 +50,36 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
     };
     
     for (let i = 0; i < maxDays; i++) {
-      const time = forecast.daily.time[i];
-      const weatherCode = forecast.daily.weather_code[i];
-      const tempMax = forecast.daily.temperature_2m_max[i];
-      const tempMin = forecast.daily.temperature_2m_min[i];
+      const index = startIndex + i;
+      
+      // Safety check to ensure array indices exist
+      if (index >= forecast.daily.time.length ||
+          !forecast.daily.time[index] || 
+          forecast.daily.weather_code[index] === undefined ||
+          forecast.daily.temperature_2m_max[index] === undefined ||
+          forecast.daily.temperature_2m_min[index] === undefined) {
+        break; // Stop if data is missing
+      }
+      
+      const time = forecast.daily.time[index];
+      const weatherCode = forecast.daily.weather_code[index];
+      const tempMax = forecast.daily.temperature_2m_max[index];
+      const tempMin = forecast.daily.temperature_2m_min[index];
       const avgTemp = (tempMax + tempMin) / 2;
       
       const weatherInfo = weatherCodeMap[weatherCode] || { main: 'Clear', description: 'clear sky', icon: '01d' };
       
+      // Parse date correctly - Open-Meteo returns ISO date strings (YYYY-MM-DD)
+      let timestamp;
+      if (typeof time === 'string') {
+        // Handle ISO date string format
+        timestamp = new Date(time + 'T12:00:00').getTime() / 1000;
+      } else {
+        timestamp = new Date(time).getTime() / 1000;
+      }
+      
       dailyForecasts.push({
-        dt: new Date(time).getTime() / 1000, // Convert to Unix timestamp
+        dt: timestamp,
         main: {
           temp: avgTemp,
           temp_max: tempMax,
@@ -118,20 +140,20 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
         
         {/* Right Column - Weather Details 2x2 Grid */}
         <div className="w-48 grid grid-cols-2 gap-2">
-          <div className="bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all">
-            <p className="text-xs text-blue-100 font-medium mb-1">Humidity</p>
+          <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all border border-blue-800/50">
+            <p className="text-xs text-gray-300 font-medium mb-1">Humidity</p>
             <p className="text-base font-bold text-white">{humidity}%</p>
           </div>
-          <div className="bg-gradient-to-br from-green-400 to-green-600 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all">
-            <p className="text-xs text-green-100 font-medium mb-1">Wind</p>
+          <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all border border-blue-800/50">
+            <p className="text-xs text-gray-300 font-medium mb-1">Wind</p>
             <p className="text-base font-bold text-white">{windSpeed} m/s</p>
           </div>
-          <div className="bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all">
-            <p className="text-[10px] text-purple-100 font-medium mb-0.5">Pressure</p>
+          <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all border border-blue-800/50">
+            <p className="text-[10px] text-gray-300 font-medium mb-0.5">Pressure</p>
             <p className="text-xs font-bold text-white">{pressure} hPa</p>
           </div>
-          <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all">
-            <p className="text-xs text-orange-100 font-medium mb-1">Visibility</p>
+          <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-xl p-3 shadow-lg hover:shadow-xl transition-all border border-blue-800/50">
+            <p className="text-xs text-gray-300 font-medium mb-1">Visibility</p>
             <p className="text-base font-bold text-white">{visibility} km</p>
           </div>
         </div>
@@ -164,7 +186,9 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
                 <img
                   src={getWeatherIcon(item.weather[0].icon)}
                   alt={item.weather[0].description}
-                  className="w-12 h-12 mx-auto mb-2"
+                  className={`w-16 h-16 mx-auto mb-2 weather-icon ${
+                    ['09d', '10d'].includes(item.weather[0].icon) ? 'rain-icon' : ''
+                  }`}
                 />
                 <p className="text-xs text-gray-300 mb-1 capitalize truncate font-medium">
                   {item.weather[0].description}
