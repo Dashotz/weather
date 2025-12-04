@@ -86,15 +86,14 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
       {/* Current Weather - 2 Column Layout */}
       <div className="flex gap-3 flex-shrink-0">
         {/* Left Column - Main Weather Card */}
-        <div className="flex-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-6 text-white shadow-2xl">
-          <div className="absolute inset-0 bg-black/10"></div>
+        <div className="flex-1 relative overflow-hidden rounded-2xl bg-gray-700/50 p-6 text-white shadow-xl border border-gray-600/50">
           <div className="relative z-10 flex items-center gap-6 h-full">
             {/* Left Side - Location & Date */}
             <div className="flex flex-col">
-              <h2 className="text-2xl font-bold mb-1 drop-shadow-md">
+              <h2 className="text-2xl font-bold mb-1">
                 {weather.name}{weather.sys?.country && `, ${weather.sys.country}`}
               </h2>
-              <p className="text-white/90 text-sm">{formatDate(weather.dt)}</p>
+              <p className="text-gray-300 text-sm">{formatDate(weather.dt)}</p>
             </div>
             
             {/* Middle - Condition with Icon */}
@@ -102,17 +101,17 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
               <img
                 src={getWeatherIcon(weather.weather[0].icon)}
                 alt={weather.weather[0].description}
-                className="w-16 h-16 drop-shadow-lg"
+                className="w-16 h-16"
               />
-              <p className="text-base capitalize text-white/90 font-medium">
+              <p className="text-base capitalize text-gray-200 font-medium">
                 {weather.weather[0].description}
               </p>
             </div>
             
             {/* Right Side - Temperature */}
             <div className="flex flex-col ml-auto">
-              <div className="text-5xl font-extrabold drop-shadow-md mb-1">{currentTemp}°C</div>
-              <p className="text-white/80 text-sm">Feels like {feelsLike}°C</p>
+              <div className="text-5xl font-extrabold mb-1">{currentTemp}°C</div>
+              <p className="text-gray-300 text-sm">Feels like {feelsLike}°C</p>
             </div>
           </div>
         </div>
@@ -141,7 +140,7 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
       {/* 5-Day Forecast - Enhanced Design */}
       {forecast && (
         <div className="flex-shrink-0">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-gray-200 mb-4 flex items-center gap-2">
             <span className="text-2xl">📅</span>
             <span>5-Day Forecast</span>
           </h3>
@@ -149,14 +148,14 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
             {getForecastItems().map((item, index) => (
               <div
                 key={index}
-                className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3 text-center hover:from-blue-50 hover:to-purple-50 transition-all hover:shadow-lg hover:scale-105 border border-gray-200/50"
+                className="bg-gray-700/50 rounded-xl p-3 text-center hover:bg-gray-700/70 transition-all hover:shadow-lg border border-gray-600/50"
               >
-                <p className="text-xs font-bold text-gray-700 mb-1">
+                <p className="text-xs font-bold text-gray-200 mb-1">
                   {new Date(item.dt * 1000).toLocaleDateString('en-US', {
                     weekday: 'short',
                   })}
                 </p>
-                <p className="text-xs text-gray-500 mb-2">
+                <p className="text-xs text-gray-400 mb-2">
                   {new Date(item.dt * 1000).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -165,15 +164,15 @@ const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
                 <img
                   src={getWeatherIcon(item.weather[0].icon)}
                   alt={item.weather[0].description}
-                  className="w-12 h-12 mx-auto mb-2 drop-shadow-sm"
+                  className="w-12 h-12 mx-auto mb-2"
                 />
-                <p className="text-xs text-gray-600 mb-1 capitalize truncate font-medium">
+                <p className="text-xs text-gray-300 mb-1 capitalize truncate font-medium">
                   {item.weather[0].description}
                 </p>
-                <p className="text-base font-bold text-gray-800">
+                <p className="text-base font-bold text-white">
                   {Math.round(item.main.temp)}°C
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-400 mt-1">
                   {Math.round(item.main.temp_max)}° / {Math.round(item.main.temp_min)}°
                 </p>
               </div>

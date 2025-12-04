@@ -79,12 +79,12 @@ function App() {
   }, []);
 
   return (
-    <div className="h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 overflow-hidden flex flex-col p-4 relative">
+    <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 overflow-hidden flex flex-col p-4 relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-800/30 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-slate-700/30 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-blue-900/30 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
       
       <div className="flex-shrink-0 mb-3 relative z-10">
@@ -123,7 +123,7 @@ function App() {
           <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden min-h-0">
             {/* Left Column: Weather & Temperatures */}
             <div className="overflow-hidden flex flex-col relative z-10">
-              <div className="glass-strong rounded-3xl shadow-2xl p-5 h-full flex flex-col overflow-y-auto border border-white/50">
+              <div className="bg-gray-800/40 backdrop-blur-sm rounded-3xl shadow-2xl p-5 h-full flex flex-col overflow-y-auto border border-gray-700/50">
                 <WeatherCard 
                   weather={weather} 
                   forecast={forecast}
@@ -135,8 +135,8 @@ function App() {
             </div>
             {/* Right Column: Map */}
             <div className="overflow-hidden flex flex-col relative z-10">
-              <div className="glass-strong rounded-3xl shadow-2xl p-5 h-full flex flex-col border border-white/50">
-                <h2 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <div className="bg-gray-800/40 backdrop-blur-sm rounded-3xl shadow-2xl p-5 h-full flex flex-col border border-gray-700/50">
+                <h2 className="text-xl font-bold text-gray-200 mb-3 flex items-center gap-2">
                   <span className="text-2xl">🗺️</span>
                   <span>Interactive Map</span>
                 </h2>
