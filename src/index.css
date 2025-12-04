@@ -26,3 +26,16 @@ html, body {
   z-index: 0;
 }
 
+/* Hide scrollbar but maintain scroll functionality */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE and Edge */
+}
+

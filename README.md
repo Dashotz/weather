@@ -78,8 +78,9 @@ weather/
 ├── src/
 │   ├── components/
 │   │   ├── SearchBar.jsx      # City search with autocomplete
-│   │   ├── WeatherCard.jsx    # Main weather display card
-│   │   └── WeatherMap.jsx     # Interactive Leaflet map
+│   │   ├── WeatherCard.jsx    # Main weather display card with forecast
+│   │   ├── WeatherMap.jsx     # Interactive Leaflet map
+│   │   └── NearbyCities.jsx   # Nearby cities weather widget
 │   ├── services/
 │   │   └── weatherApi.js      # Open-Meteo & Nominatim API integration
 │   ├── App.jsx                # Main application component

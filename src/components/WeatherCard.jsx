@@ -1,4 +1,6 @@
-const WeatherCard = ({ weather, forecast }) => {
+import NearbyCities from './NearbyCities';
+
+const WeatherCard = ({ weather, forecast, userLat, userLon, onCityClick }) => {
   if (!weather) return null;
 
   const getWeatherIcon = (iconCode) => {
@@ -80,9 +82,9 @@ const WeatherCard = ({ weather, forecast }) => {
   const visibility = weather.visibility ? weather.visibility.toFixed(1) : 'N/A';
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-4 space-y-4 h-full">
+    <div className="space-y-4 h-full flex flex-col">
       {/* Current Weather - Compact Horizontal Layout */}
-      <div className="flex items-center justify-between border-b pb-3">
+      <div className="flex items-center justify-between border-b pb-3 flex-shrink-0">
         <div className="flex-1">
           <h2 className="text-xl font-bold text-gray-800">
             {weather.name}{weather.sys?.country && `, ${weather.sys.country}`}
@@ -108,7 +110,7 @@ const WeatherCard = ({ weather, forecast }) => {
       </div>
 
       {/* Weather Details Grid - Horizontal */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-3 flex-shrink-0">
         <div className="bg-blue-50 rounded-lg p-3 text-center">
           <p className="text-xs text-gray-600 mb-1">Humidity</p>
           <p className="text-xl font-bold text-blue-600">{humidity}%</p>
@@ -129,7 +131,7 @@ const WeatherCard = ({ weather, forecast }) => {
 
       {/* 5-Day Forecast - Horizontal Layout */}
       {forecast && (
-        <div>
+        <div className="flex-shrink-0">
           <h3 className="text-lg font-bold text-gray-800 mb-3">5-Day Forecast</h3>
           <div className="grid grid-cols-5 gap-2">
             {getForecastItems().map((item, index) => (
@@ -167,6 +169,15 @@ const WeatherCard = ({ weather, forecast }) => {
           </div>
         </div>
       )}
+
+      {/* Nearby Cities */}
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <NearbyCities 
+          userLat={userLat} 
+          userLon={userLon} 
+          onCityClick={onCityClick}
+        />
+      </div>
     </div>
   );
 };

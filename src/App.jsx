@@ -16,24 +16,32 @@ function App() {
     setLoading(true);
     setError(null);
     try {
-      // If no name provided, try to get it from reverse geocoding
-      let cityName = name;
-      let countryCode = '';
-      if (!cityName) {
-        const locationInfo = await reverseGeocode(lat, lon);
-        cityName = locationInfo.name;
-        countryCode = locationInfo.country;
-      }
-      
+      // Fetch weather immediately, get city name in parallel or after
       const [currentWeatherData, forecastData] = await Promise.all([
-        getCurrentWeather(lat, lon, cityName, countryCode),
+        getCurrentWeather(lat, lon, name, ''),
         getForecast(lat, lon),
       ]);
       
       setWeather(currentWeatherData);
       setForecast(forecastData);
       setPosition([lat, lon]);
-      setCityName(cityName || currentWeatherData.name);
+      
+      // Get city name asynchronously without blocking
+      if (!name) {
+        reverseGeocode(lat, lon).then(locationInfo => {
+          if (locationInfo.name) {
+            setCityName(locationInfo.name);
+            // Update weather with city name if needed
+            setWeather(prev => prev ? { ...prev, name: locationInfo.name, sys: { ...prev.sys, country: locationInfo.country } } : prev);
+          } else {
+            setCityName(currentWeatherData.name);
+          }
+        }).catch(() => {
+          setCityName(currentWeatherData.name);
+        });
+      } else {
+        setCityName(name || currentWeatherData.name);
+      }
     } catch (err) {
       setError(err.message || 'Failed to fetch weather data. Please try again.');
       setWeather(null);
@@ -102,11 +110,19 @@ function App() {
         {weather && !loading && (
           <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden min-h-0">
             {/* Left Column: Weather & Temperatures */}
-            <div className="overflow-hidden">
-              <WeatherCard weather={weather} forecast={forecast} />
+            <div className="overflow-hidden flex flex-col">
+              <div className="bg-white rounded-2xl shadow-xl p-4 h-full flex flex-col overflow-y-auto">
+                <WeatherCard 
+                  weather={weather} 
+                  forecast={forecast}
+                  userLat={position?.[0]}
+                  userLon={position?.[1]}
+                  onCityClick={handleCitySearch}
+                />
+              </div>
             </div>
             {/* Right Column: Map */}
-            <div className="overflow-hidden">
+            <div className="overflow-hidden flex flex-col">
               <div className="bg-white rounded-2xl shadow-xl p-4 h-full flex flex-col">
                 <h2 className="text-xl font-bold text-gray-800 mb-2">Interactive Map</h2>
                 <div className="flex-1 min-h-0">

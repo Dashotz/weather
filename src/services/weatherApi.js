@@ -56,8 +56,8 @@ export const searchCity = async (query) => {
 
 export const reverseGeocode = async (lat, lon) => {
   try {
-    // Add a small delay to respect Nominatim's rate limiting
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Reduced delay for better performance
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     const response = await fetch(
       `${GEOCODING_BASE_URL}/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`
@@ -77,27 +77,6 @@ export const reverseGeocode = async (lat, lon) => {
   } catch (error) {
     console.error('Error reverse geocoding:', error);
     return { name: '', country: '' };
-  }
-};
-
-export const getWeatherByCity = async (cityName) => {
-  try {
-    // First, get coordinates from city name
-    const cities = await searchCity(cityName);
-    if (cities.length === 0) {
-      throw new Error('City not found');
-    }
-    
-    const city = cities[0];
-    const weather = await getCurrentWeather(city.lat, city.lon, city.name, city.country || '');
-    
-    return {
-      weather,
-      coords: { lat: city.lat, lon: city.lon }
-    };
-  } catch (error) {
-    console.error('Error fetching weather by city:', error);
-    throw error;
   }
 };
 
