@@ -55,7 +55,7 @@ const SearchBar = ({ onSearch, onLocationClick }) => {
             </svg>
           </div>
           {suggestions.length > 0 && (
-            <ul className="absolute z-20 w-full mt-2 glass-strong rounded-lg sm:rounded-xl shadow-2xl max-h-60 overflow-y-auto border border-white/30 animate-fadeIn">
+            <ul className="absolute z-[9999] w-full mt-2 glass-strong rounded-lg sm:rounded-xl shadow-2xl max-h-60 overflow-y-auto border border-white/30 animate-fadeIn">
               {suggestions.map((city, index) => (
                 <li
                   key={index}

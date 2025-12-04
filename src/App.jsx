@@ -87,7 +87,7 @@ function App() {
         <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-blue-900/30 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
       
-      <div className="flex-shrink-0 mb-3 relative z-10">
+      <div className="flex-shrink-0 mb-3 relative z-50">
         <header className="text-center mb-3">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-2xl mb-1">
             Weather App
